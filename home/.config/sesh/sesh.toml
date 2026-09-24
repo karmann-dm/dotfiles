@@ -1,0 +1,8 @@
+# sesh — named sessions for `t` / tmux prefix+o.  https://github.com/joshmedeski/sesh
+[default_session]
+startup_command = ""
+
+[[session]]
+name = "dotfiles"
+path = "~/dotfiles"
+startup_command = "nvim"

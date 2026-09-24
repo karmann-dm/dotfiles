@@ -1,0 +1,9 @@
+# yazi — terminal file manager. Press ~ (or F1) inside for all keys.
+[mgr]
+show_hidden = true
+sort_by = "natural"
+sort_dir_first = true
+linemode = "size"
+
+[opener]
+edit = [{ run = 'nvim "$@"', block = true, desc = "nvim" }]

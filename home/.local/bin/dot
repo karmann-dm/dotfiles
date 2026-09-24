@@ -1,0 +1,68 @@
+#!/usr/bin/env zsh
+# dot — manage this dotfiles setup.
+#
+#   dot update    pull repo, brew bundle, relink, update nvim/tmux plugins + rust
+#   dot link      re-create symlinks only
+#   dot doctor    check that everything is installed and wired up
+#   dot edit      open the dotfiles repo in nvim (inside its own tmux session if in tmux)
+#   dot keys      same as `keys`
+#   dot cd        print the repo path (use: cd $(dot cd))
+
+emulate -L zsh
+DOTFILES=${DOTFILES:-${${0:A}:h:h:h:h}}
+autoload -U colors && colors
+
+say()  { print -P "%F{blue}%B==>%b%f $*" }
+okay() { print -P "  %F{green}✓%f $*" }
+bad()  { print -P "  %F{red}✗%f $*"; (( fails++ )) }
+
+cmd_update() {
+  say "git pull";           git -C $DOTFILES pull --ff-only
+  say "brew bundle";        brew update && brew bundle --file=$DOTFILES/Brewfile && brew upgrade && brew cleanup
+  say "links";              $DOTFILES/scripts/link.sh
+  say "rust";               rustup update
+  say "neovim plugins";     nvim --headless "+Lazy! sync" +qa
+  say "tmux plugins";       ~/.local/share/tmux/plugins/tpm/bin/update_plugins all
+  say "zsh plugins";        antidote update
+  okay "all up to date — restart your shell: exec zsh"
+}
+
+cmd_doctor() {
+  local fails=0 t
+  say "commands"
+  for t in brew git nvim tmux kitty aerospace fzf rg fd bat eza zoxide atuin starship lazygit delta \
+           sesh yazi glow antidote rustup cargo rust-analyzer go gopls golangci-lint \
+           kubectl k9s helm kustomize flux yq kubeconform; do
+    if (( $+commands[$t] )); then okay $t; else bad "$t missing"; fi
+  done
+  say "symlinks"
+  for t in ~/.zshenv ~/.gitconfig ~/.config/{zsh,nvim,tmux,kitty,aerospace,starship.toml}; do
+    if [[ -L $t && ${t:A} == $DOTFILES/* ]]; then okay ${t/#$HOME/\~}; else bad "${t/#$HOME/\~} not linked (run: dot link)"; fi
+  done
+  say "extras"
+  [[ -d ~/.local/share/tmux/plugins/tpm ]] && okay "tmux plugin manager" || bad "tpm missing (./install.sh --only tmux)"
+  [[ -f ~/.gitconfig.local ]] && okay "git identity" || bad "~/.gitconfig.local missing (./install.sh --only git)"
+  fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd" || ls ~/Library/Fonts/*JetBrainsMono*Nerd* &>/dev/null \
+    && okay "Nerd Font" || bad "JetBrainsMono Nerd Font missing"
+  pgrep -xq AeroSpace && okay "AeroSpace running" || bad "AeroSpace not running (open it once)"
+  print
+  (( fails )) && print -P "%F{yellow}$fails issue(s)%f" || print -P "%F{green}everything looks good%f"
+}
+
+cmd_edit() {
+  if [[ -n $TMUX ]] && (( $+commands[sesh] )); then
+    sesh connect $DOTFILES
+  else
+    cd $DOTFILES && nvim .
+  fi
+}
+
+case ${1:-help} in
+  update) cmd_update ;;
+  link)   $DOTFILES/scripts/link.sh ;;
+  doctor) cmd_doctor ;;
+  edit)   cmd_edit ;;
+  keys)   shift; ~/.local/bin/keys "$@" ;;
+  cd)     print $DOTFILES ;;
+  *)      sed -n '2,10p' ${0:A} | sed 's/^# \{0,1\}//' ;;
+esac

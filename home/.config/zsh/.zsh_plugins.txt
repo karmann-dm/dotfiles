@@ -1,0 +1,16 @@
+# zsh plugins, loaded by antidote after compinit (`antidote update` to upgrade).
+# Completion *definitions* live in .zsh_plugins.pre.txt (they must be on fpath
+# before compinit runs). Order below matters: fzf-tab → autosuggestions →
+# syntax highlighting last.
+
+# oh-my-zsh bits: git aliases (gst, gco, gp, gcm…) and kubectl aliases (kgp, kaf, klf…)
+ohmyzsh/ohmyzsh path:lib/git.zsh
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/kubectl
+
+# Reminds you when you type a command that has a shorter alias. Great teacher.
+MichaelAquilina/zsh-you-should-use
+
+Aloxaf/fzf-tab                        # <tab> completion menu becomes fuzzy-searchable
+zsh-users/zsh-autosuggestions         # grey ghost text from history; → or ctrl-e accepts
+zdharma-continuum/fast-syntax-highlighting

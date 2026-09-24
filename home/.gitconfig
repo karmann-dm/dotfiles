@@ -1,0 +1,74 @@
+# Name/email live in ~/.gitconfig.local (created by install.sh, not committed).
+[include]
+	path = ~/.gitconfig.local
+
+[core]
+	pager = delta
+	editor = nvim
+	excludesfile = ~/.config/git/ignore
+	autocrlf = input
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+	followTags = true
+[fetch]
+	prune = true
+[rebase]
+	autoStash = true
+	autoSquash = true
+	updateRefs = true
+[merge]
+	conflictstyle = zdiff3
+[diff]
+	algorithm = histogram
+	colorMoved = default
+	tool = difftastic
+[difftool]
+	prompt = false
+[difftool "difftastic"]
+	cmd = difft "$LOCAL" "$REMOTE"
+[rerere]
+	enabled = true
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[column]
+	ui = auto
+[help]
+	autocorrect = prompt
+[commit]
+	verbose = true
+
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true          # n / N jump between files in a diff
+	line-numbers = true
+	side-by-side = false
+	syntax-theme = Catppuccin Mocha
+	file-style = bold yellow
+	hunk-header-style = file line-number syntax
+
+[alias]
+	st = status -sb
+	co = checkout
+	sw = switch
+	br = branch
+	cm = commit -m
+	amend = commit --amend --no-edit
+	undo = reset --soft HEAD~1
+	lg = log --graph --pretty=format:'%C(magenta)%h%Creset %C(bold blue)%an%Creset %s %C(green)(%cr)%Creset%C(yellow)%d%Creset' --abbrev-commit
+	dft = difftool
+	recent = branch --sort=-committerdate --format='%(committerdate:relative)%09%(refname:short)'
+
+# GitHub over https uses the gh CLI for credentials (run `gh auth login` once).
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential

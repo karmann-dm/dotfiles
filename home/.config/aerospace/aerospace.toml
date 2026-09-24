@@ -1,0 +1,174 @@
+# AeroSpace — tiling window manager. Docs: https://nikitabobko.github.io/AeroSpace/guide
+#
+#   ┌──────────────────────────────────────────────────────────────────────┐
+#   │  Everything is  alt + <key>.   Forgot something?  →  alt + ?          │
+#   │  (alt-shift-/ opens a searchable cheatsheet in a floating window)    │
+#   └──────────────────────────────────────────────────────────────────────┘
+#
+# Mental model:  alt = "look/go",  alt-shift = "take the window with me".
+
+start-at-login = true
+
+# JankyBorders draws a colored frame around the focused window so you always
+# know where your keystrokes go.
+after-startup-command = [
+  'exec-and-forget borders active_color=0xffcba6f7 inactive_color=0x00000000 width=6.0 hidpi=on',
+]
+
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+accordion-padding = 40
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+automatically-unhide-macos-hidden-apps = true
+
+# Mouse follows focus across monitors so the pointer is never "lost".
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+[key-mapping]
+preset = 'qwerty'
+
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left       = 8
+outer.bottom     = 8
+outer.top        = 8
+outer.right      = 8
+
+# ──────────────────────────────────────────────────────────────────────────────
+#  MAIN MODE
+# ──────────────────────────────────────────────────────────────────────────────
+[mode.main.binding]
+# Help ------------------------------------------------------------------------
+alt-shift-slash = '''exec-and-forget /Applications/kitty.app/Contents/MacOS/kitty \
+  --title "Keyboard cheatsheet" -o remember_window_size=no \
+  -o initial_window_width=120c -o initial_window_height=45c \
+  "$HOME/.local/bin/keys"'''
+
+# Launch ----------------------------------------------------------------------
+alt-enter = 'exec-and-forget open -na kitty'
+
+# Focus (vim directions) ------------------------------------------------------
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# Move the focused window ------------------------------------------------------
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# Size & layout ----------------------------------------------------------------
+alt-minus = 'resize smart -50'
+alt-equal = 'resize smart +50'
+alt-f = 'fullscreen'                                  # toggle
+alt-t = 'layout tiles horizontal vertical'            # side-by-side ⇄ stacked
+alt-a = 'layout accordion horizontal vertical'        # one big + peeking edges
+alt-shift-space = 'layout floating tiling'            # float ⇄ tile
+alt-shift-q = 'close'
+
+# Workspaces -------------------------------------------------------------------
+#   1 terminal · 2 browser · 3 chat · 4 notes · 5-9 free
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+
+alt-shift-1 = ['move-node-to-workspace 1', 'workspace 1']
+alt-shift-2 = ['move-node-to-workspace 2', 'workspace 2']
+alt-shift-3 = ['move-node-to-workspace 3', 'workspace 3']
+alt-shift-4 = ['move-node-to-workspace 4', 'workspace 4']
+alt-shift-5 = ['move-node-to-workspace 5', 'workspace 5']
+alt-shift-6 = ['move-node-to-workspace 6', 'workspace 6']
+alt-shift-7 = ['move-node-to-workspace 7', 'workspace 7']
+alt-shift-8 = ['move-node-to-workspace 8', 'workspace 8']
+alt-shift-9 = ['move-node-to-workspace 9', 'workspace 9']
+
+alt-tab = 'workspace-back-and-forth'                  # jump to previous workspace
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# Modes ------------------------------------------------------------------------
+alt-r = 'mode resize'
+alt-shift-semicolon = 'mode service'
+
+# ──────────────────────────────────────────────────────────────────────────────
+#  RESIZE MODE  (alt-r, then h/j/k/l; esc/enter to leave)
+# ──────────────────────────────────────────────────────────────────────────────
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+equal = 'balance-sizes'
+enter = 'mode main'
+esc = 'mode main'
+
+# ──────────────────────────────────────────────────────────────────────────────
+#  SERVICE MODE  (alt-shift-; — rarely needed "fix things" commands)
+# ──────────────────────────────────────────────────────────────────────────────
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main']           # reset messed-up layout
+f = ['layout floating tiling', 'mode main']
+backspace = ['close-all-windows-but-current', 'mode main']
+alt-shift-h = ['join-with left', 'mode main']
+alt-shift-j = ['join-with down', 'mode main']
+alt-shift-k = ['join-with up', 'mode main']
+alt-shift-l = ['join-with right', 'mode main']
+
+# ──────────────────────────────────────────────────────────────────────────────
+#  WINDOW RULES
+# ──────────────────────────────────────────────────────────────────────────────
+[[on-window-detected]]
+if.app-id = 'net.kovidgoyal.kitty'
+if.window-title-regex-substring = 'Keyboard cheatsheet'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'   # Arc
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = 'move-node-to-workspace 4'
+
+# Dialog-ish apps float instead of tiling.
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = 'layout floating'

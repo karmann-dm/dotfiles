@@ -1,0 +1,74 @@
+#!/usr/bin/env zsh
+# keys — fuzzy-search every shortcut in this setup.
+#
+#   keys            search all cheatsheets
+#   keys tmux       only tmux (also: aerospace kitty nvim rust go-yaml shell git k8s)
+#   keys --tip      print one random tip (shown when a new shell opens)
+#   keys --list     list topics
+#
+# Inside the picker: type to filter · enter = open that whole cheatsheet · esc = quit
+# Cheatsheets live in <dotfiles>/cheatsheets/*.md — edit them as you learn!
+
+emulate -L zsh
+setopt extended_glob null_glob
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+
+# This script is symlinked from <repo>/home/.local/bin/keys → resolve the repo.
+DOTFILES=${DOTFILES:-${${0:A}:h:h:h:h}}
+SHEETS=$DOTFILES/cheatsheets
+
+# Turn "| keys | action |" table rows into tab-separated searchable lines.
+rows() {
+  local f topic
+  for f in "$@"; do
+    topic=${f:t:r}
+    awk -v topic="$topic" -F'|' '
+      /^## /            { section = substr($0, 4); next }
+      /^\|[ :-]+\|/      { next }                       # separator row
+      /^\|/ {
+        gsub(/\\\|/, "\001")                          # escaped \| inside a cell
+        if (NF < 4) next
+        k = $2; a = $3; gsub(/\001/, "|", k); gsub(/\001/, "|", a)
+        gsub(/^ +| +$/, "", k); gsub(/^ +| +$/, "", a); gsub(/`/, "", k)
+        if (k == "Keys" || k == "Key" || k == "Command") next
+        printf "\033[35m%-10s\033[0m  \033[1;33m%-26s\033[0m  %s  \033[2m· %s\033[0m\t%s\n", topic, k, a, section, FILENAME
+      }' "$f"
+  done
+}
+
+sheets=( $SHEETS/*.md )
+(( ${#sheets} )) || { print -u2 "no cheatsheets found in $SHEETS"; exit 1 }
+
+case $1 in
+  --list|-l)
+    print -l ${sheets:t:r}; exit ;;
+  --tip)
+    local -a all=( "${(@f)$(rows $sheets | cut -f1)}" )
+    print -r -- $'\e[2m💡 tip\e[0m  '"${all[RANDOM % ${#all} + 1]}"$'  \e[2m(run `keys` to search them all)\e[0m'
+    exit ;;
+  ?*)
+    local match=( $SHEETS/$1*.md )
+    if (( ! ${#match} )); then
+      local -a names=( ${sheets:t:r} )
+      print -u2 "unknown topic '$1'. Topics: ${(j:, :)names}"; exit 1
+    fi
+    sheets=( $match ) ;;
+esac
+
+viewer() {
+  if command -v glow >/dev/null; then glow -p -w 100 "$1"
+  elif command -v bat >/dev/null; then bat --style=plain --paging=always "$1"
+  else less -R "$1"; fi
+}
+
+if ! (( $+commands[fzf] )); then
+  print -u2 "fzf is not installed — showing the sheets instead."; for f in $sheets; do viewer $f; done; exit
+fi
+
+while true; do
+  choice=$(rows $sheets | fzf --ansi --delimiter='\t' --with-nth=1 --no-sort \
+    --layout=reverse --border=rounded --border-label=" ⌨  keys · type to search · enter = full sheet · esc = quit " \
+    --prompt="  " --info=inline-right \
+    --color='border:#cba6f7,label:#cba6f7,prompt:#cba6f7,pointer:#f5c2e7,hl:#f38ba8,hl+:#f38ba8') || exit 0
+  viewer ${choice##*$'\t'}
+done

@@ -1,0 +1,4 @@
+--theme="Catppuccin Mocha"
+--style="numbers,changes,header"
+--map-syntax "*.tpl:Go Template"
+--map-syntax ".envrc:Bourne Again Shell (bash)"

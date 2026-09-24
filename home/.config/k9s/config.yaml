@@ -1,0 +1,14 @@
+# k9s — press ? inside k9s for keys, : to jump to a resource (:pods, :deploy, :hr …)
+k9s:
+  ui:
+    enableMouse: false
+    headless: false
+    logoless: true
+    reactive: true
+  skipLatestRevCheck: true
+  readOnly: false
+  logger:
+    tail: 500
+    buffer: 5000
+    sinceSeconds: -1
+    showTime: false

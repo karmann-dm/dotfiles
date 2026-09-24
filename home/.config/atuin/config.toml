@@ -1,0 +1,13 @@
+# atuin — ctrl-r opens full-screen history search.
+# Inside: type to search · ctrl-r cycles filter (global/host/session/directory) · enter runs · tab edits
+search_mode = "fuzzy"
+filter_mode_shell_up_key_binding = "directory"
+style = "compact"
+inline_height = 20
+show_preview = true
+show_help = true
+enter_accept = false          # enter puts the command on the prompt so you can check it
+update_check = false
+sync_address = "https://api.atuin.sh"
+auto_sync = false             # run `atuin register`/`login` then set true to sync across machines
+history_filter = ["^export .*(TOKEN|SECRET|PASSWORD|KEY)=", "^secret"]

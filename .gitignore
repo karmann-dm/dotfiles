@@ -1,0 +1,13 @@
+.DS_Store
+
+# Generated at install/run time inside linked config dirs
+home/.config/bat/themes/
+home/.config/karabiner/automatic_backups/
+home/.config/zsh/.zcompdump*
+home/.config/zsh/.zsh_plugins*.zsh
+home/.config/zsh/local.zsh
+home/.config/atuin/*.db
+home/.config/k9s/clusters/
+home/.config/k9s/skins/
+home/.config/lazygit/state.yml
+home/.config/tmux/plugins/

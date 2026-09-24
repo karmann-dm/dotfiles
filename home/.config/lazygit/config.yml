@@ -1,0 +1,20 @@
+# lazygit — press ? inside lazygit for every key in the current panel.
+gui:
+  nerdFontsVersion: "3"
+  showBottomLine: true        # keeps the key hints bar visible
+  showCommandLog: false
+  border: rounded
+  theme:
+    activeBorderColor: ["#cba6f7", bold]
+    inactiveBorderColor: ["#6c7086"]
+    selectedLineBgColor: ["#313244"]
+    optionsTextColor: ["#89b4fa"]
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+  commit:
+    signOff: false
+os:
+  editPreset: nvim-remote     # `e` opens files in the nvim you came from
+promptToReturnFromSubprocess: false

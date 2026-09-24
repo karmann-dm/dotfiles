@@ -1,0 +1,6 @@
+.DS_Store
+.envrc.local
+.direnv/
+*.swp
+.idea/
+.vscode/

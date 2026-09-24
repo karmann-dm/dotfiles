@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Fuzzy session picker (tmux prefix + o, or `t` in the shell).
+# Lists running tmux sessions, sesh configs and zoxide directories.
+set -euo pipefail
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+
+pick=$(sesh list --icons | fzf --ansi --no-sort --layout=reverse --border=rounded \
+  --border-label=" sessions · enter = open " --prompt '⚡ ' \
+  --header '^a all  ^t tmux  ^g configs  ^x zoxide  ^f find dirs  ^d kill' \
+  --bind 'tab:down,btab:up' \
+  --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list --icons)' \
+  --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t --icons)' \
+  --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
+  --bind 'ctrl-x:change-prompt(📁 )+reload(sesh list -z --icons)' \
+  --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 3 -t d -E .git -E node_modules -E target . ~)' \
+  --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡ )+reload(sesh list --icons)' \
+  --color='border:#cba6f7,label:#cba6f7,prompt:#cba6f7') || exit 0
+
+[ -n "$pick" ] && sesh connect "$pick"
