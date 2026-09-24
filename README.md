@@ -44,20 +44,40 @@ git clone https://github.com/karmann-dm/dotfiles ~/dotfiles
 cd ~/dotfiles && ./install.sh
 ```
 
-The installer is **idempotent**, so re-running it is safe. It:
+It works the same on a **fresh Mac** and on one that's **already half set up**:
 
-1. Installs the Xcode Command Line Tools and Homebrew
-2. Installs everything in the [`Brewfile`](Brewfile) (apps, CLI tools, fonts)
-3. Symlinks `home/` into `~`, moving any existing files to `~/.dotfiles-backup/<date>/`
-4. Asks for your git name/email and writes them to `~/.gitconfig.local` (not committed)
-5. Installs Rust via rustup (stable + rust-analyzer, clippy, rustfmt) and cargo tools
+| You already have… | What happens |
+|---|---|
+| Homebrew, Xcode tools, rustup, Go | Kept. Only what's missing gets installed. |
+| Brew packages at older versions | Upgraded (`--no-upgrade` leaves them alone) |
+| kitty / AeroSpace / fonts you installed by hand (not via brew) | Left untouched. The installer says how to hand them over to brew (`brew install --cask --adopt …`). |
+| Your own `~/.config/nvim`, `~/.gitconfig`, `~/.aerospace.toml`, `~/.tmux.conf`, … | Moved to `~/.dotfiles-backup/<date>/`, never deleted. For Neovim, the old plugin data goes there too so it can't clash with LazyVim. |
+| A name/email in your old `~/.gitconfig` | Reused for `~/.gitconfig.local` without asking |
+| AeroSpace / tmux / kitty already running | Configs are reloaded at the end, no restart needed |
+| One step failing (network, a cask needing a password, …) | The other steps still run. The summary ends with the exact command to retry only the failed ones, e.g. `./install.sh --only packages,nvim` |
+
+Re-running the installer is always safe: a second run changes nothing unless something is missing or outdated.
+
+```sh
+./install.sh                 # install what's missing + upgrade what's there
+./install.sh --no-upgrade    # install what's missing, keep existing versions
+./install.sh --no-macos      # skip the macOS `defaults` tweaks
+./install.sh --only rust,go  # just some steps
+```
+
+Steps: `xcode brew clone packages link git shell rust go tmux nvim themes macos reload`.
+
+What it sets up:
+
+1. Xcode Command Line Tools and Homebrew
+2. Everything in the [`Brewfile`](Brewfile) (apps, CLI tools, fonts)
+3. Symlinks from `home/` into `~`
+4. `~/.gitconfig.local` with your git name/email (not committed)
+5. Rust via rustup (stable + rust-analyzer, clippy, rustfmt) and cargo tools
    (nextest, watch, expand, audit, machete, llvm-cov, …)
-6. Installs the Go tools (gopls, goimports, gotestsum, …)
-7. Installs the tmux and Neovim plugins
-8. Applies macOS defaults (fast key repeat, Dock autohide, AeroSpace-friendly Spaces, …).
-   Skip this with `--no-macos`.
-
-Run a single step: `./install.sh --only link` (steps: `xcode brew clone packages link git shell rust go tmux nvim themes macos`).
+6. Go tools (gopls, goimports, gotestsum, …)
+7. tmux and Neovim plugins
+8. macOS defaults (fast key repeat, Dock autohide, AeroSpace-friendly Spaces, …)
 
 ### After installing (one-time manual steps)
 
