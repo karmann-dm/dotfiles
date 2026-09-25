@@ -326,8 +326,18 @@ step_macos() {
 step_reload() {
   step "Reloading running apps"
   if pgrep -xq AeroSpace; then
-    if aerospace reload-config; then ok "AeroSpace config reloaded"
-    else warn "AeroSpace reload failed — check ~/.config/aerospace/aerospace.toml"; fi
+    local out
+    if out="$(aerospace reload-config 2>&1)"; then
+      ok "AeroSpace config reloaded"
+    elif printf '%s' "$out" | grep -qi "incompatible"; then
+      # brew just upgraded AeroSpace: the new CLI can't talk to the old app still running.
+      killall AeroSpace 2>/dev/null || true
+      sleep 1
+      open -a AeroSpace && ok "AeroSpace was upgraded — restarted it (re-grant Accessibility if windows stop tiling)"
+    else
+      printf '%s\n' "$out"
+      warn "AeroSpace reload failed — check ~/.config/aerospace/aerospace.toml"
+    fi
   fi
   if has tmux && tmux info >/dev/null 2>&1; then
     tmux source-file "$HOME/.config/tmux/tmux.conf" && ok "tmux config reloaded"
