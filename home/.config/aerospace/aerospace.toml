@@ -132,6 +132,14 @@ if.app-id = 'net.kovidgoyal.kitty'
 if.window-title-regex-substring = 'Keyboard cheatsheet'
 run = 'layout floating'
 
+# kitty hides its title bar (hide_window_decorations), so it has no traffic-light
+# buttons and AeroSpace's heuristics mistake it for a dialog and float it.
+# Force every other kitty window to tile. (Rules stop at the first match, so the
+# cheatsheet rule above still wins for the cheatsheet window.)
+[[on-window-detected]]
+if.app-id = 'net.kovidgoyal.kitty'
+run = 'layout tiling'
+
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = 'move-node-to-workspace 2'
