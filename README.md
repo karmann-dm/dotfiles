@@ -188,6 +188,10 @@ lazygit, borders).
 
 ## Troubleshooting
 
+- **A window floats instead of tiling:** press `alt-shift-space` to toggle it. If an app always
+  does it, add a rule for it in `aerospace.toml` (see the kitty one) — find its app id with
+  `aerospace list-apps`.
+
 - **"Refusing to load formula … from untrusted tap":** newer Homebrew requires trusting
   third-party taps. The installer trusts the three taps in the `Brewfile` (`nikitabobko/tap`,
   `FelixKratz/formulae`, `fluxcd/tap`) and nothing else. To do it by hand: `brew trust <tap>`.

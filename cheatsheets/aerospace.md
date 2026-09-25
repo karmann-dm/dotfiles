@@ -41,3 +41,10 @@ Everything starts with **alt** (⌥). `alt` = look/go · `alt-shift` = take the 
 | `backspace` | Close all windows except the focused one |
 | `alt-shift-h/j/k/l` | Join with neighbour (make a nested split) |
 | `esc` | Reload config and leave |
+
+## When a window misbehaves
+| Keys | Action |
+|------|--------|
+| `alt-shift-space` | Window floating that should tile (or the other way round)? Toggle it |
+| `alt-shift-;` then `esc` | Reload the AeroSpace config |
+| `aerospace debug-windows` (shell) | Shows why AeroSpace floats/ignores a window — paste it when asking for help |
