@@ -358,6 +358,11 @@ minute or two for big projects. The status line shows the progress.
 | Tests | No in-editor runner yet: `ctrl-space \|` for a tmux pane, then `gwt` (add `--tests 'Name'` for one class) |
 | Debug | `gwb` first, then `space db` + `space dc` |
 
+**`space dc` says "Config references missing adapter `java`"**: the Java debugger wasn't
+installed yet when the language server started. Check `:Mason` shows `java-debug-adapter` and
+`java-test` as installed (or run `:MasonInstall java-debug-adapter java-test`), then **quit and
+reopen Neovim**. The installer pre-installs these, so it only happens if that step failed.
+
 The Kotlin language server is slower than the Java one and occasionally needs a restart after
 big build changes: `:LspRestart`.
 

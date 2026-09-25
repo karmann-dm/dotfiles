@@ -344,7 +344,18 @@ step_nvim() {
   local cmd="Lazy! restore"
   [ "$UPGRADE" = 1 ] && cmd="Lazy! sync"
   nvim --headless "+$cmd" +qa >/dev/null 2>&1 || { warn "lazy.nvim reported errors — open nvim and run :Lazy"; return 1; }
-  ok "done (language servers install in the background on first launch — see :Mason)"
+  ok "plugins ready"
+  # Language servers, formatters and debug adapters — installed now rather than in the
+  # background on first open (which e.g. leaves Java without a debugger until restart).
+  # SDKMAN's java must be on PATH for the Java/Kotlin servers.
+  set +u
+  # shellcheck disable=SC1091
+  [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+  set -u
+  local out rc=0
+  out="$(nvim --headless "+luafile $DOTFILES/scripts/mason-install.lua" 2>&1)" || rc=$?
+  printf '%s\n' "$out" | grep '^mason:' | sed 's/^/  /' || true
+  [ "$rc" -eq 0 ] || { warn "Mason packages incomplete — open nvim and check :Mason"; return 1; }
 }
 
 step_themes() {

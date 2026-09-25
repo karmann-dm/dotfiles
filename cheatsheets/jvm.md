@@ -38,6 +38,7 @@ takes a while: the language server imports the Gradle/Maven build.
 | `space cxm` (visual) | Extract method |
 | `space cgs` | Go to super implementation |
 | `gd` / `gI` / `gr` | Definition / implementations / references |
+| `:MasonInstall java-debug-adapter java-test`, restart nvim | Fix "missing adapter java" on `space dc` |
 
 ## Kotlin in Neovim
 | Keys | Action |
