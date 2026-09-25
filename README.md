@@ -188,6 +188,13 @@ lazygit, borders).
 
 ## Troubleshooting
 
+- **"Refusing to load formula … from untrusted tap":** newer Homebrew requires trusting
+  third-party taps. The installer trusts the three taps in the `Brewfile` (`nikitabobko/tap`,
+  `FelixKratz/formulae`, `fluxcd/tap`) and nothing else. To do it by hand: `brew trust <tap>`.
+- **"circular dependency: libtiff, webp":** a harmless Homebrew warning caused by stale
+  metadata of already-installed packages. It goes away with
+  `brew reinstall libtiff webp`.
+
 - **`alt` shortcuts type characters like `˙` instead:** AeroSpace isn't running or doesn't have
   Accessibility permission yet.
 - **Caps lock doesn't act as esc/ctrl:** open Karabiner-Elements and allow its driver and

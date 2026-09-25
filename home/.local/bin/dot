@@ -17,13 +17,11 @@ okay() { print -P "  %F{green}✓%f $*" }
 bad()  { print -P "  %F{red}✗%f $*"; (( fails++ )) }
 
 cmd_update() {
-  say "git pull";           git -C $DOTFILES pull --ff-only
-  say "brew bundle";        brew update && brew bundle --file=$DOTFILES/Brewfile && brew upgrade && brew cleanup
-  say "links";              $DOTFILES/scripts/link.sh
-  say "rust";               rustup update
-  say "neovim plugins";     nvim --headless "+Lazy! sync" +qa
-  say "tmux plugins";       ~/.local/share/tmux/plugins/tpm/bin/update_plugins all
-  say "zsh plugins";        antidote update
+  say "git pull";  git -C $DOTFILES pull --ff-only || print -P "  %F{yellow}!%f could not fast-forward — updating with the local copy"
+  # Same code path as the installer: trusts our taps, skips hand-installed apps,
+  # upgrades everything else, and keeps going if one step fails.
+  $DOTFILES/install.sh --only packages,link,shell,rust,go,tmux,nvim,themes,reload || return 1
+  brew cleanup
   okay "all up to date — restart your shell: exec zsh"
 }
 

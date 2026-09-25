@@ -128,9 +128,29 @@ for c in json.load(sys.stdin).get("casks", []):
 ' || true
 }
 
+# Newer Homebrew refuses to load formulae/casks from third-party taps until
+# they're trusted ("Refusing to load formula … from untrusted tap"). The taps
+# listed in our Brewfile are the ones this setup deliberately depends on, so
+# tap + trust exactly those — nothing else.
+trust_taps() {
+  brew trust --help >/dev/null 2>&1 || return 0   # older Homebrew: no tap trust yet
+  local t failed=0
+  # shellcheck disable=SC2013  # tap names never contain spaces
+  for t in $(sed -n 's/^tap "\([^"]*\)".*/\1/p' "$DOTFILES/Brewfile"); do
+    brew tap "$t" >/dev/null 2>&1 || true
+    if brew trust "$t" >/dev/null 2>&1; then
+      ok "trusted tap $t"
+    else
+      warn "could not trust tap $t — run: brew trust $t"; failed=1
+    fi
+  done
+  return $failed
+}
+
 step_packages() {
   step "Packages (Brewfile) — the first run takes a while"
   brew update || warn "brew update failed (offline?) — continuing with the local index"
+  trust_taps || true
 
   local brewfile="$DOTFILES/Brewfile" tmp skip cask app
   skip="$(unmanaged_casks)"
