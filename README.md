@@ -102,12 +102,12 @@ You said you're not used to keyboard shortcuts yet, so several layers of hints a
 | New shell | Every new shell prints **one random tip**. Turn it off with `export DOTFILES_TIPS=0` in `~/.config/zsh/local.zsh`. |
 | Shell | **zsh-you-should-use** tells you when an alias exists for the command you just typed. **Autosuggestions** show grey completions from history. |
 | tmux | The status bar **always shows** `^space + space menu · ? keys`. It turns purple and says **PREFIX** once you've pressed the prefix. `prefix space` opens a menu that shows every action *with its key*. |
-| Neovim | **which-key**: press `space`, `g`, `z`, `[` or `]` and wait, and a menu lists what comes next. **precognition** shows where `w b e $ ^ { }` would jump, right in the text. **hardtime** (hint mode only) points out repetitive habits like `jjjjj`. |
+| Neovim | **which-key**: press `space`, `g`, `z`, `[` or `]` and wait, and a menu lists what comes next. **precognition** (off by default, `space uP`) shows where `w b e $ ^ { }` would jump, right in the text. **hardtime** (hint mode only) points out repetitive habits like `jjjjj`. |
 | AeroSpace | A colored border (JankyBorders) marks the focused window. `alt-?` opens the cheatsheet. |
 | lazygit, k9s, yazi, bacon | Press `?` inside any of them. |
 
-Once you know the keys, turn the training wheels off with `space uP` (motion hints) and
-`space uH` (habit hints) in Neovim.
+Motion hints are off by default: switch them on while practising with `space uP`. Once you know
+the keys, turn off the habit hints too with `space uH`.
 
 ### A learning path that works
 

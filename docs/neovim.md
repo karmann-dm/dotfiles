@@ -77,7 +77,7 @@ This config is set up to teach you as you go:
 | Helper | What it does | Toggle |
 |---|---|---|
 | **which-key** | Press `space`, `g`, `z`, `[`, `]` and wait: a menu shows what comes next | always on |
-| **precognition** | Faint markers above the cursor line show where `w` `b` `e` `^` `$` `{` `}` would jump | `space uP` |
+| **precognition** | Faint markers around the cursor line show where `w` `b` `e` `^` `$` `{` `}` would jump. Off by default. | `space uP` |
 | **hardtime** | Spots slow habits (`jjjjj`, holding arrows) and suggests the faster motion. It only hints and never blocks. | `space uH` |
 | **`space sk`** | Fuzzy-search every keymap by description ("rename", "format", …) | — |
 | **`space ?`** | Keymaps that only exist in the current file type | — |
@@ -133,7 +133,7 @@ Inside a picker: type to filter, `ctrl-j` / `ctrl-k` (or arrows) to move, `enter
 
 ## 5. Moving fast
 
-The goal is to stop pressing `j` twenty times. Use precognition's markers to learn these.
+The goal is to stop pressing `j` twenty times. To practise these, turn on precognition's markers with `space uP`.
 
 | Keys | Moves to… |
 |---|---|
@@ -484,7 +484,7 @@ After updating plugins, commit `lazy-lock.json` so other machines get the same v
 
 ## 16. Practice plan
 
-About 15 minutes a day. Always keep precognition and hardtime on while learning.
+About 15 minutes a day. Keep hardtime on while learning, and switch on the motion hints (`space uP`) during practice.
 
 | Week | Focus | Daily drill |
 |---|---|---|

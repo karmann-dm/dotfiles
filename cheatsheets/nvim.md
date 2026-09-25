@@ -1,7 +1,7 @@
 # Neovim (LazyVim)
 
 **Leader = `space`.** Press it and *wait* — which-key shows every option. Same for `g`, `z`, `[`, `]`.
-Grey hints above the line show where `w`/`b`/`e`/`$`… jump (toggle `space uP`).
+Want to see where `w`/`b`/`e`/`$`… would jump? `space uP` shows grey hints on the cursor line.
 
 ## Help
 | Keys | Action |

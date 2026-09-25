@@ -15,12 +15,12 @@ return {
   },
 
   -- precognition: shows where w / b / e / $ / ^ / { / } would jump, right in the
-  -- buffer. Turn it off once you've got it: <space>uP
+  -- buffer. Off by default (it's busy on every line); turn it on with <space>uP
   {
     "tris203/precognition.nvim",
     event = "VeryLazy",
     opts = {
-      startVisible = true,
+      startVisible = false,
       showBlankVirtLine = false,
     },
     keys = {
