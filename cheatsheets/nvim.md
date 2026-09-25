@@ -12,6 +12,7 @@ Grey hints above the line show where `w`/`b`/`e`/`$`… jump (toggle `space uP`)
 | `space ?` | Keymaps for the current buffer |
 | `space uP` / `space uH` | Toggle motion hints / habit hints |
 | `:Tutor` | 30-min interactive vim tutorial — do it once! |
+| `dot guide` (shell) | The full Neovim guide (docs/neovim.md) |
 
 ## Files & search
 | Keys | Action |
@@ -48,7 +49,7 @@ Grey hints above the line show where `w`/`b`/`e`/`$`… jump (toggle `space uP`)
 | `u` / `ctrl-r` | Undo / redo |
 | `.` | Repeat last change |
 | `gcc` / `gc` (visual) | Toggle comment |
-| `alt-j` / `alt-k` | Move line down / up |
+| `ddp` / `ddkP` | Move line down / up (alt-j/k belongs to AeroSpace) |
 | `gsa` / `gsd` / `gsr` | Surround add / delete / replace |
 | `space p` | Yank history |
 

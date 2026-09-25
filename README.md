@@ -124,6 +124,12 @@ The goal is one new habit per week, not everything at once.
 
 ---
 
+## Neovim guide
+
+New to Neovim? **[docs/neovim.md](docs/neovim.md)** walks through modes, a day-1 survival kit,
+the hint system, moving and editing, and the Rust, Go and YAML/Kubernetes workflows. It ends
+with a 6-week practice plan. Read it in the terminal with `dot guide`.
+
 ## What's inside
 
 ```
@@ -131,6 +137,7 @@ The goal is one new habit per week, not everything at once.
 ├── install.sh            # bootstrap a fresh Mac
 ├── Brewfile              # every app/CLI installed
 ├── cheatsheets/*.md      # what `keys` searches — edit these as you learn!
+├── docs/neovim.md        # the Neovim guide (`dot guide`)
 ├── scripts/
 │   ├── link.sh           # symlink home/ → ~ (with backups)
 │   └── macos.sh          # system defaults
