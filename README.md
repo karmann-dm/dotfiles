@@ -165,6 +165,13 @@ with a 6-week practice plan. Read it in the terminal with `dot guide`.
 - **Neovim:** gopls, gofumpt + goimports on save, golangci-lint, delve debugging, neotest-golang.
 - **CLI:** `gotestsum` (`got`), `golangci-lint` (`gol`).
 
+### Java / Kotlin
+- **Toolchain:** SDKMAN installs the latest Temurin LTS JDK, Gradle, Maven and Kotlin. Switch JDKs
+  with `sdk use java …`. A `.sdkmanrc` in a project switches versions automatically on `cd`.
+- **Neovim:** nvim-jdtls (with JUnit test runner and debugger, Lombok support), kotlin-language-server,
+  ktlint formatting and the Kotlin debugger. See `keys jvm` or the [Neovim guide](docs/neovim.md#11b-java-and-kotlin).
+- **Shell:** `gw` (./gradlew), `gwb` / `gwt` / `gwr`, `mvnt`.
+
 ### YAML / GitOps
 - **Neovim:** yamlls with SchemaStore, which covers kustomization, Chart.yaml, GitHub Actions,
   compose and more automatically. **`space cK`** detects `apiVersion`/`kind` and adds the matching

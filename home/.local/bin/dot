@@ -21,7 +21,7 @@ cmd_update() {
   say "git pull";  git -C $DOTFILES pull --ff-only || print -P "  %F{yellow}!%f could not fast-forward — updating with the local copy"
   # Same code path as the installer: trusts our taps, skips hand-installed apps,
   # upgrades everything else, and keeps going if one step fails.
-  $DOTFILES/install.sh --only packages,link,shell,rust,go,tmux,nvim,themes,reload || return 1
+  $DOTFILES/install.sh --only packages,link,shell,rust,go,java,tmux,nvim,themes,reload || return 1
   brew cleanup
   okay "all up to date — restart your shell: exec zsh"
 }
@@ -31,6 +31,7 @@ cmd_doctor() {
   say "commands"
   for t in brew git nvim tmux kitty aerospace fzf rg fd bat eza zoxide atuin starship lazygit delta \
            sesh yazi glow antidote rustup cargo rust-analyzer go gopls golangci-lint \
+           java gradle mvn kotlin ktlint \
            kubectl k9s helm kustomize flux yq kubeconform; do
     if (( $+commands[$t] )); then okay $t; else bad "$t missing"; fi
   done
@@ -40,6 +41,7 @@ cmd_doctor() {
   done
   say "extras"
   [[ -d ~/.local/share/tmux/plugins/tpm ]] && okay "tmux plugin manager" || bad "tpm missing (./install.sh --only tmux)"
+  [[ -s ~/.sdkman/bin/sdkman-init.sh ]] && okay "SDKMAN" || bad "SDKMAN missing (./install.sh --only java)"
   [[ -f ~/.gitconfig.local ]] && okay "git identity" || bad "~/.gitconfig.local missing (./install.sh --only git)"
   fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd" || ls ~/Library/Fonts/*JetBrainsMono*Nerd* &>/dev/null \
     && okay "Nerd Font" || bad "JetBrainsMono Nerd Font missing"

@@ -33,6 +33,14 @@ alias got='gotestsum --format pkgname -- ./...'
 alias gol='golangci-lint run'
 alias gomt='go mod tidy'
 
+# Java / Kotlin (Gradle wrapper first — it pins the project's Gradle version)
+alias gw='./gradlew'
+alias gwb='./gradlew build'
+alias gwt='./gradlew test'
+alias gwr='./gradlew run'
+alias gwc='./gradlew clean'
+alias mvnt='mvn -q test'
+
 # Kubernetes / GitOps  (kubectl plugin also gives: kgp, kgs, kaf, kdel, klf …)
 alias k='kubectl'
 alias kx='kubectx'

@@ -68,6 +68,11 @@ brew "golangci-lint"
 brew "delve"
 brew "gofumpt"
 
+# ── Java / Kotlin ────────────────────────────────────────────────────────────
+# JDKs, Gradle, Maven and Kotlin come from SDKMAN (see install.sh `java` step):
+#   sdk list java · sdk install java 17.0.x-tem · sdk use java … · .sdkmanrc per project
+brew "ktlint"
+
 # ── GitOps / Kubernetes / YAML ────────────────────────────────────────────────
 brew "kubernetes-cli"   # kubectl
 brew "kubectx"          # kubectx / kubens

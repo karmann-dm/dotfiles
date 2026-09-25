@@ -27,7 +27,7 @@ DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/karmann-dm/dotfiles.git}"
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 
 # Steps before `clone` are prerequisites: if they fail, nothing else can work.
-STEPS="xcode brew clone packages link git shell rust go tmux nvim themes macos reload"
+STEPS="xcode brew clone packages link git shell rust go java tmux nvim themes macos reload"
 SKIP_MACOS=0
 UPGRADE=1
 ONLY=""
@@ -279,6 +279,49 @@ step_go() {
     go install "$pkg@latest"
   done
   ok "$(go version | cut -d' ' -f3)"
+}
+
+# SDKMAN manages the JVM toolchain (JDKs, Gradle, Maven, Kotlin), so projects can
+# pin versions in a .sdkmanrc. Its scripts aren't `set -eu` safe, so this step
+# relaxes those and checks results itself.
+step_java() {
+  step "Java / Kotlin toolchain (SDKMAN)"
+  export SDKMAN_DIR="$HOME/.sdkman"
+  if [ ! -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
+    # rcupdate=false: don't edit shell rc files — our .zshrc already loads SDKMAN.
+    curl -fsSL "https://get.sdkman.io?rcupdate=false" | bash
+  else
+    ok "SDKMAN already installed"
+  fi
+  [ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ] || { warn "SDKMAN install failed"; return 1; }
+
+  # Switch Java/Gradle versions automatically when entering a dir with a .sdkmanrc.
+  if [ -f "$SDKMAN_DIR/etc/config" ] && grep -q '^sdkman_auto_env=false' "$SDKMAN_DIR/etc/config"; then
+    sed -i.bak 's/^sdkman_auto_env=false/sdkman_auto_env=true/' "$SDKMAN_DIR/etc/config" && rm -f "$SDKMAN_DIR/etc/config.bak"
+  fi
+
+  set +eu
+  # shellcheck disable=SC1091
+  source "$SDKMAN_DIR/bin/sdkman-init.sh"
+  # shellcheck disable=SC2034  # read by the sdk function
+  sdkman_auto_answer=true          # no y/n prompts during install (this run only)
+  [ "$UPGRADE" = 1 ] && sdk selfupdate >/dev/null 2>&1
+
+  local c failed=""
+  for c in java gradle maven kotlin; do
+    if [ -d "$SDKMAN_DIR/candidates/$c/current" ]; then
+      # Upgrading Java would silently switch your default JDK — leave that to you.
+      if [ "$UPGRADE" = 1 ] && [ "$c" != java ]; then sdk upgrade "$c" >/dev/null 2>&1; fi
+      ok "$c $(basename "$(readlink "$SDKMAN_DIR/candidates/$c/current")")"
+    else
+      # No version = SDKMAN's recommended default (for Java: the latest Temurin LTS).
+      if sdk install "$c" </dev/null; then ok "$c installed"; else failed="$failed $c"; fi
+    fi
+  done
+  set -eu
+
+  [ -z "$failed" ] || { warn "failed to install:$failed — try: sdk install <name>"; return 1; }
+  ok "JDKs: sdk list java · switch: sdk use java <id> · per project: sdk env init"
 }
 
 step_tmux() {

@@ -63,6 +63,11 @@ export _ZO_EXCLUDE_DIRS="$HOME:/tmp/*"
 (( $+commands[direnv] ))   && eval "$(direnv hook zsh)"
 (( $+commands[starship] )) && eval "$(starship init zsh)"
 
+# SDKMAN: JDKs / Gradle / Maven / Kotlin (`sdk help`). With sdkman_auto_env on,
+# entering a directory with a .sdkmanrc switches to that project's versions.
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] && source $SDKMAN_DIR/bin/sdkman-init.sh
+
 # ── Keys ──────────────────────────────────────────────────────────────────────
 bindkey -e                                  # emacs-style line editing (ctrl-a/e/w/u…)
 bindkey '^E' autosuggest-accept             # ctrl-e / → accept the grey suggestion

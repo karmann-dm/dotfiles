@@ -18,6 +18,7 @@ Contents:
 9. [Git](#9-git)
 10. [Rust workflow](#10-rust-workflow)
 11. [Go workflow](#11-go-workflow)
+11b. [Java and Kotlin](#11b-java-and-kotlin)
 12. [YAML, Kubernetes and Helm](#12-yaml-kubernetes-and-helm)
 13. [Tests and debugging](#13-tests-and-debugging)
 14. [Maintenance and customizing](#14-maintenance-and-customizing)
@@ -316,6 +317,49 @@ LazyVim's Go extra sets up **gopls**, **gofumpt + goimports** (format and fix im
 Tabs are displayed 4 columns wide in Go files.
 
 ---
+
+## 11b. Java and Kotlin
+
+**The toolchain comes from SDKMAN**, not Homebrew. The installer sets up the latest Temurin LTS
+JDK, Gradle, Maven and Kotlin (`sdk current` shows versions). A project that needs another JDK:
+
+```sh
+sdk list java                 # find an id, e.g. 17.0.12-tem
+sdk install java 17.0.12-tem
+cd my-project && sdk use java 17.0.12-tem && sdk env init   # pins it in .sdkmanrc
+```
+
+After that, `cd`-ing into the project switches the JDK automatically. Start Neovim from the same
+shell so the language server sees the right JDK. (The Java language server itself needs Java 21+
+as the default JDK, even when the project builds with 17.)
+
+**Open Neovim from the project root** (the folder with `settings.gradle(.kts)`, `build.gradle(.kts)`
+or `pom.xml`). The first time, the language server imports the whole build, which can take a
+minute or two for big projects. The status line shows the progress.
+
+**Java** (nvim-jdtls, the Eclipse language server):
+
+| Task | How |
+|---|---|
+| Run the test under cursor / all tests in the class | `space tr` / `space tt` (`space tT` to pick) |
+| Debug | `space db` for a breakpoint, then `space dc` to pick the main class |
+| Generate constructor / getters / `toString` / implement interface | `space ca` |
+| Organize imports | `space co` |
+| Extract variable / constant / method | `space cxv` / `space cxc` / select + `space cxm` |
+| Go to super method | `space cgs` |
+| Lombok | Works out of the box |
+
+**Kotlin** (kotlin-language-server + ktlint):
+
+| Task | How |
+|---|---|
+| Completion, `gd`, `gr`, `K`, `space ca` | As for every language |
+| Format | On save with ktlint, or `space cf` |
+| Tests | No in-editor runner yet: `ctrl-space \|` for a tmux pane, then `gwt` (add `--tests 'Name'` for one class) |
+| Debug | `gwb` first, then `space db` + `space dc` |
+
+The Kotlin language server is slower than the Java one and occasionally needs a restart after
+big build changes: `:LspRestart`.
 
 ## 12. YAML, Kubernetes and Helm
 

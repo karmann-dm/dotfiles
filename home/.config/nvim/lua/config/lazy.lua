@@ -21,6 +21,8 @@ require("lazy").setup({
     -- Languages ------------------------------------------------------------
     { import = "lazyvim.plugins.extras.lang.rust" }, -- rustaceanvim, crates.nvim, codelldb
     { import = "lazyvim.plugins.extras.lang.go" }, -- gopls, gofumpt, goimports, delve, neotest-golang
+    { import = "lazyvim.plugins.extras.lang.java" }, -- jdtls, java-debug-adapter, java-test (JUnit)
+    { import = "lazyvim.plugins.extras.lang.kotlin" }, -- kotlin-language-server, ktlint, kotlin-debug-adapter
     { import = "lazyvim.plugins.extras.lang.yaml" }, -- yamlls + SchemaStore
     { import = "lazyvim.plugins.extras.lang.helm" },
     { import = "lazyvim.plugins.extras.lang.docker" },
